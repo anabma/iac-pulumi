@@ -40,7 +40,6 @@ vasaloppet-pulumi/
 ├── make.ps1                 # Windows automation
 ├── setup.sh                 # First-time setup script (macOS/Linux)
 ├── setup.ps1                # First-time setup script (Windows)
-├── .env.example             # Copy to .env and fill in your AWS credentials
 ├── .gitignore
 ├── .github/
 │   └── workflows/

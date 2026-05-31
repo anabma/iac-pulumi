@@ -1,3 +1,15 @@
+# .github/workflows/pulumi.yml
+#
+# GitHub Actions CI/CD pipeline.
+# State is stored in S3 – no Pulumi Cloud account needed.
+#
+# Secrets to set in GitHub (Settings → Secrets → Actions):
+#   AWS_ACCESS_KEY_ID         – your AWS IAM access key
+#   AWS_SECRET_ACCESS_KEY     – your AWS IAM secret key
+#   PULUMI_CONFIG_PASSPHRASE  – leave empty (just press Enter when asked)
+#   DB_PASSWORD               – Pulumi123
+#   SSH_PUBLIC_KEY            – contents of ~/.ssh/id_rsa.pub
+
 name: Pulumi
 
 on:
@@ -19,9 +31,9 @@ jobs:
     runs-on: ubuntu-latest
     if: github.event_name == 'pull_request'
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v5
 
-      - uses: actions/setup-python@v5
+      - uses: actions/setup-python@v6
         with:
           python-version: "3.11"
 
@@ -45,9 +57,9 @@ jobs:
     if: github.event_name == 'push' && github.ref == 'refs/heads/main'
     timeout-minutes: 60
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v5
 
-      - uses: actions/setup-python@v5
+      - uses: actions/setup-python@v6
         with:
           python-version: "3.11"
 
