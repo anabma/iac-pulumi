@@ -1,0 +1,11 @@
+name: vasaloppet-infrastructure
+description: Vasaloppet Infrastructure with Pulumi on AWS (equivalent of Terraform IBM Cloud setup)
+runtime:
+  name: python
+  options:
+    toolchain: pip
+    virtualenv: venv
+config:
+  pulumi:tags:
+    value:
+      pulumi:template: python

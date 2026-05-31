@@ -1,0 +1,66 @@
+name: Pulumi
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+    branches: [main]
+
+env:
+  AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
+  AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+  AWS_DEFAULT_REGION: eu-north-1
+  PULUMI_CONFIG_PASSPHRASE: ${{ secrets.PULUMI_CONFIG_PASSPHRASE }}
+
+jobs:
+
+  preview:
+    name: pulumi preview
+    runs-on: ubuntu-latest
+    if: github.event_name == 'pull_request'
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.11"
+
+      - name: Install dependencies
+        run: pip install -r requirements.txt
+
+      - name: Login to S3 backend
+        run: pulumi login s3://vasaloppet-pulumi-state
+
+      - name: Set secrets from GitHub Secrets
+        run: |
+          pulumi config set --secret vasaloppet-infrastructure:db_password "${{ secrets.DB_PASSWORD }}" --stack dev
+          pulumi config set vasaloppet-infrastructure:ssh_public_key "${{ secrets.SSH_PUBLIC_KEY }}" --stack dev
+
+      - name: pulumi preview
+        run: pulumi preview --stack dev
+
+  deploy:
+    name: pulumi up
+    runs-on: ubuntu-latest
+    if: github.event_name == 'push' && github.ref == 'refs/heads/main'
+    timeout-minutes: 60
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.11"
+
+      - name: Install dependencies
+        run: pip install -r requirements.txt
+
+      - name: Login to S3 backend
+        run: pulumi login s3://vasaloppet-pulumi-state
+
+      - name: Set secrets from GitHub Secrets
+        run: |
+          pulumi config set --secret vasaloppet-infrastructure:db_password "${{ secrets.DB_PASSWORD }}" --stack dev
+          pulumi config set vasaloppet-infrastructure:ssh_public_key "${{ secrets.SSH_PUBLIC_KEY }}" --stack dev
+
+      - name: pulumi up
+        run: pulumi up --stack dev --yes
