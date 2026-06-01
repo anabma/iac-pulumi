@@ -1,8 +1,8 @@
-# Vasaloppet Infrastructure – Pulumi on AWS
+# Client Infrastructure – Pulumi on AWS
 
 Examensarbete – Chas Academy DevOps 2025
 
-This project recreates Vasaloppet's cloud infrastructure using [Pulumi](https://www.pulumi.com/) on AWS, as part of a comparison with the original Terraform implementation on IBM Cloud.
+This project recreates client's cloud infrastructure using [Pulumi](https://www.pulumi.com/) on AWS, as part of a comparison with the original Terraform implementation on IBM Cloud.
 
 > **Note:** The original infrastructure was built with Terraform on IBM Cloud during an internship at Atea. Since Pulumi has no official IBM Cloud provider, this implementation runs on AWS instead. This limitation is itself one of the key findings of the thesis.
 
@@ -31,7 +31,7 @@ This project recreates Vasaloppet's cloud infrastructure using [Pulumi](https://
 ## Project structure
 
 ```
-vasaloppet-pulumi/
+iac-pulumi/
 ├── __main__.py              # Root – equivalent of Terraform's main.tf
 ├── Pulumi.yaml              # Project metadata – do not edit
 ├── Pulumi.dev.yaml          # Dev config – auto-updated by pulumi config set
@@ -135,10 +135,10 @@ This project uses **AWS S3** as the Pulumi state backend instead of Pulumi Cloud
 
 ```bash
 # Create bucket (done once by setup.sh)
-aws s3 mb s3://vasaloppet-pulumi-state --region eu-north-1
+aws s3 mb s3://client-pulumi-state --region eu-north-1
 
 # Login
-pulumi login s3://vasaloppet-pulumi-state
+pulumi login s3://client-pulumi-state
 ```
 
 ---
@@ -194,8 +194,8 @@ make db-connect                     # Connect to database (terminal 2)
 
 This project is part of an examensarbete (bachelor thesis) at Chas Academy, DevOps programme 2025.
 
-**Title:** Infrastructure as Code – En jämförelse mellan Terraform och Pulumi för Vasaloppets molninfrastruktur
+**Title:** Infrastructure as Code – En jämförelse mellan Terraform och Pulumi för kundens molninfrastruktur
 
-**Conclusion:** Terraform is the better choice for this specific project, primarily because Pulumi lacks an IBM Cloud provider, and secondarily because Vasaloppet's app is tightly coupled to IBM WatsonX and IBM Container Registry.
+**Conclusion:** Terraform is the better choice for this specific project, primarily because Pulumi lacks an IBM Cloud provider, and secondarily because client's app is tightly coupled to IBM WatsonX and IBM Container Registry.
 
 For teams running on AWS/Azure/GCP with Python experience, Pulumi is a genuine alternative – fewer files, more expressive code and a clean stack-based environment management system.
