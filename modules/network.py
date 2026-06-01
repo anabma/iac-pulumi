@@ -4,7 +4,7 @@ import pulumi_aws as aws
 
 class NetworkModule(pulumi.ComponentResource):
     def __init__(self, name: str, opts=None):
-        super().__init__("vasaloppet:modules:Network", name, {}, opts)
+        super().__init__("client:modules:Network", name, {}, opts)
 
         # VPC
         self.vpc = aws.ec2.Vpc(
