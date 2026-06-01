@@ -1,6 +1,6 @@
 #!/bin/bash
 # ============================================================
-# Vasaloppet Pulumi – Local Setup Script
+# client Pulumi – Local Setup Script
 # Run once to configure everything on your machine.
 # Usage: bash setup.sh
 # ============================================================
@@ -9,7 +9,7 @@ set -e
 
 echo ""
 echo "======================================"
-echo "  Vasaloppet Pulumi Setup"
+echo "  client Pulumi Setup"
 echo "======================================"
 echo ""
 
@@ -43,14 +43,14 @@ echo "Passphrase set to empty"
 # ── S3 BUCKET ────────────────────────────────────────────────
 echo ""
 echo "Creating S3 bucket for state..."
-aws s3 mb s3://vasaloppet-pulumi-state --region eu-north-1 2>/dev/null \
+aws s3 mb s3://client-pulumi-state --region eu-north-1 2>/dev/null \
   && echo "S3 bucket created" \
   || echo "S3 bucket already exists (that's fine)"
 
 # ── PULUMI LOGIN ─────────────────────────────────────────────
 echo ""
 echo "Logging in to S3 backend..."
-pulumi login s3://vasaloppet-pulumi-state
+pulumi login s3://client-pulumi-state
 echo "Logged in to S3"
 
 # ── STACK ────────────────────────────────────────────────────
@@ -64,7 +64,7 @@ pulumi stack init dev 2>/dev/null \
 echo ""
 if [ ! -f ~/.ssh/id_rsa ]; then
   echo "Creating SSH key..."
-  ssh-keygen -t rsa -b 4096 -f ~/.ssh/id_rsa -N "" -C "vasaloppet"
+  ssh-keygen -t rsa -b 4096 -f ~/.ssh/id_rsa -N "" -C "client"
   echo "SSH key created"
 else
   echo "SSH key already exists"
@@ -77,17 +77,17 @@ echo "Setting Pulumi config..."
 pulumi config set aws:region eu-north-1 --stack dev
 echo "aws:region = eu-north-1"
 
-pulumi config set vasaloppet-infrastructure:ssh_public_key "$(cat ~/.ssh/id_rsa.pub)" --stack dev
+pulumi config set client-infrastructure:ssh_public_key "$(cat ~/.ssh/id_rsa.pub)" --stack dev
 echo "ssh_public_key set"
 
 echo ""
 read -sp "Choose a database password (min 8 characters, e.g. Pulumi123): " DB_PASS
 echo ""
-pulumi config set --secret vasaloppet-infrastructure:db_password "$DB_PASS" --stack dev
+pulumi config set --secret client-infrastructure:db_password "$DB_PASS" --stack dev
 echo "db_password set"
 
-pulumi config set vasaloppet-infrastructure:image_reference "nginx:latest" --stack dev
-pulumi config set vasaloppet-infrastructure:dashboard_image_reference "nginx:latest" --stack dev
+pulumi config set client-infrastructure:image_reference "nginx:latest" --stack dev
+pulumi config set client-infrastructure:dashboard_image_reference "nginx:latest" --stack dev
 echo "image references set"
 
 # ── DONE ─────────────────────────────────────────────────────
