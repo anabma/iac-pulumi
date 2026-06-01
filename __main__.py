@@ -34,13 +34,6 @@ database = DatabaseModule(
     db_password=db_password,
 )
 
-# ── APP-MODULEN ÄR BORTTAGEN ──────────────────────────────────────────────────
-# I Terraform-projektet körde app-servern containers från IBM Container
-# Registry (icr.io) med IBM WatsonX-integration. Varken ICR eller WatsonX
-# finns på AWS. App-modulen kan därför inte återskapas på ett meningsfullt
-# sätt och är borttagen från Pulumi-implementationen.
-# Se diskussionsavsnittet i rapporten.
-
 # ── S3 BUCKETS ────────────────────────────────────────────────────────────────
 bucket_suffix = random.RandomId("bucket-suffix", byte_length=4)
 
