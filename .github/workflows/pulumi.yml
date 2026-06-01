@@ -41,12 +41,12 @@ jobs:
         run: pip install -r requirements.txt
 
       - name: Login to S3 backend
-        run: pulumi login s3://vasaloppet-pulumi-state
+        run: pulumi login s3://client-pulumi-state
 
       - name: Set secrets from GitHub Secrets
         run: |
-          pulumi config set --secret vasaloppet-infrastructure:db_password "${{ secrets.DB_PASSWORD }}" --stack dev
-          pulumi config set vasaloppet-infrastructure:ssh_public_key "${{ secrets.SSH_PUBLIC_KEY }}" --stack dev
+          pulumi config set --secret client-infrastructure:db_password "${{ secrets.DB_PASSWORD }}" --stack dev
+          pulumi config set client-infrastructure:ssh_public_key "${{ secrets.SSH_PUBLIC_KEY }}" --stack dev
 
       - name: pulumi preview
         run: pulumi preview --stack dev
@@ -67,12 +67,12 @@ jobs:
         run: pip install -r requirements.txt
 
       - name: Login to S3 backend
-        run: pulumi login s3://vasaloppet-pulumi-state
+        run: pulumi login s3://client-pulumi-state
 
       - name: Set secrets from GitHub Secrets
         run: |
-          pulumi config set --secret vasaloppet-infrastructure:db_password "${{ secrets.DB_PASSWORD }}" --stack dev
-          pulumi config set vasaloppet-infrastructure:ssh_public_key "${{ secrets.SSH_PUBLIC_KEY }}" --stack dev
+          pulumi config set --secret client-infrastructure:db_password "${{ secrets.DB_PASSWORD }}" --stack dev
+          pulumi config set client-infrastructure:ssh_public_key "${{ secrets.SSH_PUBLIC_KEY }}" --stack dev
 
       - name: pulumi up
         run: pulumi up --stack dev --yes
