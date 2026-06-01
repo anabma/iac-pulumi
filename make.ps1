@@ -41,11 +41,11 @@ function Install-Tools {
 function Setup-SSH {
     $key = "$HOME\.ssh\id_rsa"
     if (-not (Test-Path $key)) {
-        ssh-keygen -t rsa -b 4096 -f $key -N '""' -C "vasaloppet"
+        ssh-keygen -t rsa -b 4096 -f $key -N '""' -C "client"
         Write-Host "SSH key created"
     } else { Write-Host "SSH key already exists" }
     $pubKey = Get-Content "$key.pub" -Raw
-    pulumi config set vasaloppet-infrastructure:ssh_public_key $pubKey --stack dev
+    pulumi config set client-infrastructure:ssh_public_key $pubKey --stack dev
     Write-Host "SSH key set in Pulumi config"
 }
 
@@ -86,7 +86,7 @@ function DB-Tunnel {
 function DB-Connect {
     $dbName = pulumi stack output db_name --stack dev
     $dbUser = pulumi stack output db_user --stack dev
-    $env:PGPASSWORD = pulumi config get vasaloppet-infrastructure:db_password --stack dev
+    $env:PGPASSWORD = pulumi config get client-infrastructure:db_password --stack dev
     $env:Path += ";C:\Program Files\PostgreSQL\18\bin"
     psql -h localhost -p 5433 -U $dbUser -d $dbName
 }
