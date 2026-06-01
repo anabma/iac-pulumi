@@ -11,7 +11,7 @@ class BastionModule(pulumi.ComponentResource):
         ssh_public_key: str,
         opts=None,
     ):
-        super().__init__("vasaloppet:modules:Bastion", name, {}, opts)
+        super().__init__("client:modules:Bastion", name, {}, opts)
 
     
         self.key_pair = aws.ec2.KeyPair(
