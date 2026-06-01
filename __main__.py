@@ -13,14 +13,14 @@ db_password    = config.require_secret("db_password")
 ssh_public_key = config.require("ssh_public_key")
 
 # ── NETWORK ───────────────────────────────────────────────────────────────────
-network = NetworkModule("vasaloppet")
+network = NetworkModule("client")
 
 # ── SECURITY ──────────────────────────────────────────────────────────────────
-security = SecurityModule("vasaloppet", vpc_id=network.vpc.id)
+security = SecurityModule("client", vpc_id=network.vpc.id)
 
 # ── BASTION ───────────────────────────────────────────────────────────────────
 bastion = BastionModule(
-    "vasaloppet",
+    "client",
     subnet_id=network.public_subnet.id,
     sg_id=security.bastion_sg.id,
     ssh_public_key=ssh_public_key,
@@ -28,7 +28,7 @@ bastion = BastionModule(
 
 # ── DATABASE ──────────────────────────────────────────────────────────────────
 database = DatabaseModule(
-    "vasaloppet",
+    "client",
     subnet_ids=[network.private_subnet.id, network.private_subnet_b.id],
     sg_id=security.db_sg.id,
     db_password=db_password,
@@ -45,30 +45,30 @@ database = DatabaseModule(
 bucket_suffix = random.RandomId("bucket-suffix", byte_length=4)
 
 logs_data_bucket = aws.s3.Bucket(
-    "vasaloppet-logs-data",
-    bucket=pulumi.Output.concat("vasaloppet-logs-data-", bucket_suffix.hex),
+    "client-logs-data",
+    bucket=pulumi.Output.concat("client-logs-data-", bucket_suffix.hex),
     force_destroy=True,
-    tags={"Name": "vasaloppet-logs-data"},
+    tags={"Name": "client-logs-data"},
 )
 
 logs_metrics_bucket = aws.s3.Bucket(
-    "vasaloppet-logs-metrics",
-    bucket=pulumi.Output.concat("vasaloppet-logs-metrics-", bucket_suffix.hex),
+    "client-logs-metrics",
+    bucket=pulumi.Output.concat("client-logs-metrics-", bucket_suffix.hex),
     force_destroy=True,
-    tags={"Name": "vasaloppet-logs-metrics"},
+    tags={"Name": "client-logs-metrics"},
 )
 
 # ── CLOUDWATCH ────────────────────────────────────────────────────────────────
 log_group = aws.cloudwatch.LogGroup(
-    "vasaloppet-log-group",
-    name="/vasaloppet/app",
+    "client-log-group",
+    name="/client/app",
     retention_in_days=7,
-    tags={"Name": "vasaloppet-logs"},
+    tags={"Name": "client-logs"},
 )
 
 # ── IAM ───────────────────────────────────────────────────────────────────────
 cloudwatch_role = aws.iam.Role(
-    "vasaloppet-cw-role",
+    "client-cw-role",
     assume_role_policy="""{
         "Version": "2012-10-17",
         "Statement": [{
@@ -80,7 +80,7 @@ cloudwatch_role = aws.iam.Role(
 )
 
 aws.iam.RolePolicy(
-    "vasaloppet-cw-s3-policy",
+    "client-cw-s3-policy",
     role=cloudwatch_role.id,
     policy=pulumi.Output.all(
         logs_data_bucket.arn,
