@@ -13,7 +13,7 @@ def _get_my_ip() -> str:
 
 class SecurityModule(pulumi.ComponentResource):
     def __init__(self, name: str, vpc_id, opts=None):
-        super().__init__("vasaloppet:modules:Security", name, {}, opts)
+        super().__init__("client:modules:Security", name, {}, opts)
 
         my_ip = _get_my_ip()
 
