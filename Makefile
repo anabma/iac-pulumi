@@ -1,5 +1,5 @@
-# Vasaloppet Infrastructure – Pulumi / AWS
-# Run from the vasaloppet-pulumi/ directory.
+# Client Infrastructure – Pulumi / AWS
+# Run from the client-pulumi/ directory.
 # CI/CD is handled by GitHub Actions – no runner instance needed.
 
 .PHONY: help bootstrap install-tools setup-ssh login-aws init preview deploy
@@ -44,13 +44,13 @@ install-tools:
 
 setup-ssh:
 	@if [ ! -f ~/.ssh/id_rsa ]; then \
-		ssh-keygen -t rsa -b 4096 -f ~/.ssh/id_rsa -N "" -C "vasaloppet"; \
+		ssh-keygen -t rsa -b 4096 -f ~/.ssh/id_rsa -N "" -C "client"; \
 		chmod 600 ~/.ssh/id_rsa; \
 		echo "SSH key created"; \
 	else \
 		echo "SSH key already exists"; \
 	fi
-	@pulumi config set vasaloppet-infrastructure:ssh_public_key "$$(cat ~/.ssh/id_rsa.pub)" --stack dev
+	@pulumi config set client-infrastructure:ssh_public_key "$$(cat ~/.ssh/id_rsa.pub)" --stack dev
 	@echo "SSH key set in Pulumi config"
 
 login-aws:
@@ -102,7 +102,7 @@ db-tunnel:
 db-connect:
 	@DB_NAME=$$(pulumi stack output db_name --stack dev); \
 	DB_USER=$$(pulumi stack output db_user --stack dev); \
-	PGPASSWORD=$$(pulumi config get vasaloppet-infrastructure:db_password --stack dev) \
+	PGPASSWORD=$$(pulumi config get client-infrastructure:db_password --stack dev) \
 	psql -h localhost -p 5433 -U $$DB_USER -d $$DB_NAME
 
 app-tunnel:
