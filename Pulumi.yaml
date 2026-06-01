@@ -1,5 +1,5 @@
-name: vasaloppet-infrastructure
-description: Vasaloppet Infrastructure with Pulumi on AWS (equivalent of Terraform IBM Cloud setup)
+name: client-infrastructure
+description: Client Infrastructure with Pulumi on AWS (equivalent of Terraform IBM Cloud setup)
 runtime:
   name: python
   options:
