@@ -11,7 +11,7 @@ class DatabaseModule(pulumi.ComponentResource):
         db_password: str,
         opts=None,
     ):
-        super().__init__("vasaloppet:modules:Database", name, {}, opts)
+        super().__init__("client:modules:Database", name, {}, opts)
 
         # ── RDS SUBNET GROUP ───────────────────────────────────────────
         self.subnet_group = aws.rds.SubnetGroup(
@@ -28,7 +28,7 @@ class DatabaseModule(pulumi.ComponentResource):
             engine_version="15",
             instance_class="db.t3.micro",
             allocated_storage=20,
-            db_name="vasaloppetdb",
+            db_name="clientdb",
             username="dbadmin",
             password=db_password,
             db_subnet_group_name=self.subnet_group.name,
